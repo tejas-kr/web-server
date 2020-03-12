@@ -50,28 +50,34 @@ app.get('/weather', (req, res) => {
         });
     }
 
-    geocode(address, (error, { letitude, longitude, location }) => {
-        if(error) {
+    /**
+     * Instead of object destructuring, I have used the whole data object because - 
+     * * I am sending back data as undefined from the backend, if some error is occuring
+     * * So if the datd object is itself undefined, it means letitude, longitude and location will not be there
+     */
+
+    geocode(address, (error, data) => {
+        if(error || !data) {
             return res.send({
-                error: 'Some Error Occurred'
+                error
             });
         }
 
-        forecast(letitude, longitude, (error, foreCastData) => {
+        forecast(data.letitude, data.longitude, (error, foreCastData) => {
             if(error) {
                 return res.send({
-                    error: 'Some Error Occurred'
+                    error
                 });
             }
 
             res.send({
-                location: location,
-                foreCastData: foreCastData
+                location: data.location,
+                forecast: foreCastData
             });
         });
 
     });
-    
+
 });
 
 app.get('/products', (req, res) => {
