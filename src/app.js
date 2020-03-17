@@ -54,16 +54,17 @@ app.get('/weather', (req, res) => {
      * Instead of object destructuring, I have used the whole data object because - 
      * * I am sending back data as undefined from the backend, if some error is occuring
      * * So if the datd object is itself undefined, it means letitude, longitude and location will not be there
+     * 
+     * To fix this problem, indtead of writing the bull-shit code that we have written below
+     * we could have just used the default params we i am going to do now!!!
      */
 
-    geocode(address, (error, data) => {
-        if(error || !data) {
-            return res.send({
-                error
-            });
+    geocode(address, (error, { longitude, letitude, location } = {}) => {
+        if(error) {
+            return res.send({ error });
         }
 
-        forecast(data.letitude, data.longitude, (error, foreCastData) => {
+        forecast(letitude, longitude, (error, foreCastData) => {
             if(error) {
                 return res.send({
                     error
@@ -71,7 +72,7 @@ app.get('/weather', (req, res) => {
             }
 
             res.send({
-                location: data.location,
+                location: location,
                 forecast: foreCastData
             });
         });
