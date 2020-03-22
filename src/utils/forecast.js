@@ -24,13 +24,13 @@ const forecast = (x, y, callback) => {
         url, 
         json: true
     }, (error, { body }) => {
-
         if (error) {
             callback('Unable to get the weather data', undefined);
         } else if (body.error) {
             callback('Unable to find the location', undefined);
         } else {
-            callback(undefined, body.daily.data[0].summary + ' It is currently ' + body.currently.temperature + ' degrees out. There is a ' + body.currently.precipProbability + '% chance of rain.');
+            const weatherData = body.daily.data[0].summary + ' It is currently ' + body.currently.temperature + ' degrees out. There is a ' + body.currently.precipProbability + '% chance of rain. Temperature High today is ' + body.daily.data[0].temperatureHigh + ' and Temperature Low today is ' + body.daily.data[0].temperatureLow;
+            callback(undefined, weatherData);
         }
 
     });
